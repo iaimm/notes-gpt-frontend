@@ -1,3 +1,4 @@
+![CI](https://github.com/iamm/notes-gpt-frontend/actions/workflows/ci.yml/badge.svg)
 # Vue 3 + Vite
 
 # notes-gpt-frontend
@@ -17,3 +18,4 @@ AI 笔记问答前端：Vue3 + Vite + Pinia + axios
 ![alt text](image-1.png)
 ![alt text](image-2.png)
 ![alt text](image-3.png)
+![alt text](image-4.png)
