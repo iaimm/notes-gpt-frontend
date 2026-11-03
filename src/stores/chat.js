@@ -50,13 +50,22 @@ export const useChatStore = defineStore('chat', () => {
 
             const frames = buffer.split('\n\n')   // SSE 帧以空行分隔（Day 1 截图里的格式）
             buffer = frames.pop()                  // 末尾可能是不完整的半帧，留到下轮
+        
             for (const frame of frames) {
-                const line = frame.trim()
-                if (!line.startsWith('data:')) continue
-                const data = JSON.parse(line.slice(5).trim());
-                if (data === '[DONE]') continue
-                messages.value[messages.value.length - 1].content += data
-                if (!started) { started = true; isSending.value = false }   // 首字到达，"思考中"退场
+            let event = 'message'
+            let data = ''
+            for (const ln of frame.split('\n')) {
+                if (ln.startsWith('event:')) event = ln.slice(6).trim()
+                else if (ln.startsWith('data:')) data = ln.slice(5).trim()
+            }
+            if (event === 'refs') {
+                messages.value[messages.value.length - 1].refs = JSON.parse(data).refs
+                continue                                  // refs 帧不往正文里加
+            }
+            if (data === '[DONE]') continue
+            const text = JSON.parse(data)  
+            messages.value[messages.value.length - 1].content += text
+            if (!started) { started = true; isSending.value = false }
             }
             }
         } catch (e) {
